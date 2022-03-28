@@ -13,3 +13,7 @@ repositories {
     maven("https://maven.aliyun.com/repository/public")
     mavenCentral()
 }
+dependencies {
+    implementation("org.jsoup:jsoup:1.14.3")
+    implementation("com.alibaba:fastjson:1.2.80")
+}
