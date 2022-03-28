@@ -38,7 +38,7 @@ object KeywordReply : KotlinPlugin(
                     val html = Jsoup.connect("https://v1.hitokoto.cn/?encode=json").ignoreContentType(true).get()
                     val hitokoto = JSON.parseObject(html.text())
                     val at = At(event.sender.id)
-                    subject.sendMessage(at + (hitokoto.getString("hitokoto") + "来源：" + hitokoto.getString("from")))
+                    subject.sendMessage(at + (hitokoto.getString("hitokoto") + "\n来源：" + hitokoto.getString("from")))
 
                 } else {
                     for ((key, value) in KeywordReply.Keyword) {
