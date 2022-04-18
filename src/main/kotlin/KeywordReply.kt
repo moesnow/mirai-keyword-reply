@@ -39,11 +39,11 @@ object KeywordReply : KotlinPlugin(
                     val hitokoto = JSON.parseObject(html.text())
                     val at = At(event.sender.id)
                     subject.sendMessage(at + (hitokoto.getString("hitokoto") + "\n来源：" + hitokoto.getString("from")))
-
                 } else {
                     for ((key, value) in KeywordReply.Keyword) {
                         if (message.contentToString().contains(key)) {
                             subject.sendMessage(value)
+                            break
                         }
                     }
                 }
