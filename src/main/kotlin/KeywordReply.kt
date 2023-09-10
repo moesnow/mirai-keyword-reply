@@ -54,13 +54,17 @@ object KeywordReply : KotlinPlugin(
     }
 
     private suspend fun handleHitokoto(subject: Group, message: MessageChain) {
-        val html = Jsoup.connect("https://v1.hitokoto.cn/?encode=json")
-            .ignoreContentType(true)
-            .get()
-        val hitokoto = JSON.parseObject(html.text())
-        val replyMessage = message.quote() +
-                "${hitokoto.getString("hitokoto")}\n来源：${hitokoto.getString("from")}"
-        subject.sendMessage(replyMessage)
+        try {
+            val html = Jsoup.connect("https://v1.hitokoto.cn/?encode=json")
+                .ignoreContentType(true)
+                .get()
+            val hitokoto = JSON.parseObject(html.text())
+            val replyMessage = message.quote() +
+                    "${hitokoto.getString("hitokoto")}\n来源：${hitokoto.getString("from")}"
+            subject.sendMessage(replyMessage)
+        } catch (e: Exception) {
+            logger.error(e)
+        }
     }
 
     private suspend fun handleKeywordReply(subject: Group, message: MessageChain) {
