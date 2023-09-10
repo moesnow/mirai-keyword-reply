@@ -9,7 +9,7 @@ mirai插件，支持关键词回复和一言回复
 首次运行后会生成配置文件位于 `config/top.kotori.KeywordReply/KeywordReply.yml`
 
 ```yaml
-group_id: 123456789 # 启用的群号
+groupId: 123456789 # 启用的群号
 Keyword: # 例如：消息内包含hello，就会回复hi
   hello: hi
   hi: hello
