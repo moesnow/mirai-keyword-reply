@@ -17,7 +17,7 @@ object KeywordReply : KotlinPlugin(
     JvmPluginDescription(
         id = "top.kotori.KeywordReply",
         name = "Keyword Reply",
-        version = "1.0.0",
+        version = "1.0.1",
     )
 ) {
     object KeywordReply : AutoSavePluginConfig("KeywordReply") {
