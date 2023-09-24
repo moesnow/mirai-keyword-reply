@@ -14,4 +14,5 @@ Keyword: # 例如：消息内包含hello，就会回复hi
   hello: hi
   hi: hello
 hitokoto: true # 是否开启一言，发送“一言”触发
+tiangou: true # 是否开启舔狗日记，发送“舔狗日记”触发
 ```
