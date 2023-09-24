@@ -29,6 +29,7 @@ object KeywordReply : KotlinPlugin(
             )
         )
         val hitokoto: Boolean by value(true)
+        val tiangou: Boolean by value(true)
     }
 
     override fun onEnable() {
@@ -45,6 +46,9 @@ object KeywordReply : KotlinPlugin(
                 if (KeywordReply.hitokoto && messageContent == "一言") {
                     // 处理一言请求
                     handleHitokoto(event.subject, event.message)
+                } else if (KeywordReply.tiangou && messageContent == "舔狗日记") {
+                    // 处理舔狗日记请求
+                    handleTiangou(event.subject, event.message)
                 } else {
                     // 处理关键词回复
                     handleKeywordReply(event.subject, event.message)
@@ -61,6 +65,18 @@ object KeywordReply : KotlinPlugin(
             val hitokoto = JSON.parseObject(html.text())
             val replyMessage = message.quote() +
                     "${hitokoto.getString("hitokoto")}\n来源：${hitokoto.getString("from")}"
+            subject.sendMessage(replyMessage)
+        } catch (e: Exception) {
+            logger.error(e)
+        }
+    }
+
+    private suspend fun handleTiangou(subject: Group, message: MessageChain) {
+        try {
+            val html = Jsoup.connect("https://cloud.qqshabi.cn/api/tiangou/api.php")
+                .ignoreContentType(true)
+                .get()
+            val replyMessage = message.quote() + html.text()
             subject.sendMessage(replyMessage)
         } catch (e: Exception) {
             logger.error(e)
