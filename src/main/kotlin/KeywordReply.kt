@@ -17,15 +17,20 @@ object KeywordReply : KotlinPlugin(
     JvmPluginDescription(
         id = "top.kotori.KeywordReply",
         name = "Keyword Reply",
-        version = "1.0.1",
+        version = "1.0.2",
     )
 ) {
     object KeywordReply : AutoSavePluginConfig("KeywordReply") {
-        val groupId by value("123456789")
-        val Keyword: Map<String, String> by value(
+        val Groups: List<String> by value(
+            listOf(
+                "123456789",
+                "987654321",
+            )
+        )
+        val Keywords: Map<String, List<String>> by value(
             mapOf(
-                "hello" to "hi",
-                "hi" to "hello",
+                "value1" to listOf("key1", "key2"),
+                "value2" to listOf("key3", "key4", "key5"),
             )
         )
         val hitokoto: Boolean by value(true)
@@ -41,17 +46,19 @@ object KeywordReply : KotlinPlugin(
         GlobalEventChannel.subscribeAlways<GroupMessageEvent> { event ->
             val groupId = event.sender.group.id.toString()
             val messageContent = event.message.contentToString()
-
-            if (groupId == KeywordReply.groupId) {
-                if (KeywordReply.hitokoto && messageContent == "一言") {
-                    // 处理一言请求
-                    handleHitokoto(event.subject, event.message)
-                } else if (KeywordReply.tiangou && messageContent == "舔狗日记") {
-                    // 处理舔狗日记请求
-                    handleTiangou(event.subject, event.message)
-                } else {
-                    // 处理关键词回复
-                    handleKeywordReply(event.subject, event.message)
+            for (group in KeywordReply.Groups) {
+                if (group == groupId) {
+                    if (KeywordReply.hitokoto && messageContent == "一言") {
+                        // 处理一言请求
+                        handleHitokoto(event.subject, event.message)
+                    } else if (KeywordReply.tiangou && messageContent == "舔狗日记") {
+                        // 处理舔狗日记请求
+                        handleTiangou(event.subject, event.message)
+                    } else {
+                        // 处理关键词回复
+                        handleKeywordReply(event.subject, event.message)
+                    }
+                    break
                 }
             }
         }
@@ -85,10 +92,12 @@ object KeywordReply : KotlinPlugin(
 
     private suspend fun handleKeywordReply(subject: Group, message: MessageChain) {
         val messageContent = message.contentToString()
-        for ((key, value) in KeywordReply.Keyword) {
-            if (messageContent.contains(key)) {
-                subject.sendMessage(message.quote() + value)
-                break
+        for (keyword in KeywordReply.Keywords) {
+            for (value in keyword.value) {
+                if (messageContent.contains(value)) {
+                    subject.sendMessage(message.quote() + keyword.key)
+                    return
+                }
             }
         }
     }
